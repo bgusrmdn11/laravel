@@ -13,174 +13,53 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <!-- Aggressive floating WhatsApp removal -->
     <script>
-        // Debug function to detect floating elements
-        function debugFloatingElements() {
-            console.log('🔍 DEBUGGING FLOATING ELEMENTS...');
-            
-            // Check all fixed positioned elements
-            const allElements = document.querySelectorAll('*');
-            const floatingElements = [];
-            
-            allElements.forEach(el => {
-                const style = window.getComputedStyle(el);
-                if (style.position === 'fixed') {
-                    floatingElements.push({
-                        element: el,
-                        className: el.className,
-                        id: el.id,
-                        innerHTML: el.innerHTML.substring(0, 100),
-                        style: {
-                            position: style.position,
-                            top: style.top,
-                            right: style.right,
-                            bottom: style.bottom,
-                            left: style.left,
-                            zIndex: style.zIndex
-                        }
-                    });
-                }
-            });
-            
-            console.log('🎯 Found fixed positioned elements:', floatingElements);
-            
-            // Check for WhatsApp related content
-            const whatsappElements = document.querySelectorAll('*');
-            const suspiciousElements = [];
-            
-            whatsappElements.forEach(el => {
-                const text = el.textContent?.toLowerCase() || '';
-                const html = el.innerHTML?.toLowerCase() || '';
-                const className = el.className?.toLowerCase() || '';
-                
-                if (text.includes('whatsapp') || html.includes('whatsapp') || 
-                    html.includes('wa.me') || className.includes('whatsapp') ||
-                    html.includes('fa-whatsapp')) {
-                    suspiciousElements.push({
-                        element: el,
-                        reason: 'Contains WhatsApp content',
-                        className: el.className,
-                        id: el.id,
-                        innerHTML: el.innerHTML.substring(0, 200)
-                    });
-                }
-            });
-            
-            console.log('⚠️ Found WhatsApp related elements:', suspiciousElements);
-            
-            // Check for iframes
-            const iframes = document.querySelectorAll('iframe');
-            console.log('📱 Found iframes:', iframes);
-            
-            // Check for external scripts
-            const scripts = document.querySelectorAll('script[src]');
-            const externalScripts = [];
-            scripts.forEach(script => {
-                if (script.src && (script.src.includes('http') || script.src.includes('//'))) {
-                    externalScripts.push({
-                        src: script.src,
-                        async: script.async,
-                        defer: script.defer
-                    });
-                }
-            });
-            console.log('📜 Found external scripts:', externalScripts);
-            
-            // Check for shadow DOM
-            const shadowRoots = [];
-            document.querySelectorAll('*').forEach(el => {
-                if (el.shadowRoot) {
-                    shadowRoots.push({
-                        element: el,
-                        shadowRoot: el.shadowRoot
-                    });
-                }
-            });
-            console.log('👥 Found shadow DOM elements:', shadowRoots);
-            
-            return { floatingElements, suspiciousElements, iframes, externalScripts, shadowRoots };
-        }
 
-        // Ultra aggressive floating WhatsApp removal
+
+        // Sederhana: Hapus floating WhatsApp saja
         function removeFloatingWhatsApp() {
-            // First, debug what we found
-            const debugInfo = debugFloatingElements();
-            // Remove by class patterns
-            const classPatterns = ['floating', 'fab', 'whatsapp', 'wa-float', 'chat-float', 'widget'];
-            classPatterns.forEach(pattern => {
-                document.querySelectorAll(`[class*="${pattern}"]`).forEach(el => {
-                    if (el.innerHTML && (el.innerHTML.toLowerCase().includes('whatsapp') || 
-                        el.innerHTML.includes('fa-whatsapp') || 
-                        el.innerHTML.includes('wa.me'))) {
-                        el.remove();
-                    }
-                });
-            });
+            console.log('🗑️ Menghapus floating WhatsApp...');
             
-            // Remove by href patterns
-            document.querySelectorAll('a[href*="wa.me"], a[href*="whatsapp"], a[href*="api.whatsapp"]').forEach(el => el.remove());
-            
-            // Remove by onclick patterns
-            document.querySelectorAll('[onclick*="whatsapp"], [onclick*="wa.me"]').forEach(el => el.remove());
-            
-            // Remove fixed positioned elements with WhatsApp content
-            document.querySelectorAll('div, a, button, span').forEach(el => {
-                const style = window.getComputedStyle(el);
-                if (style.position === 'fixed' && 
-                    (style.bottom !== 'auto' || style.right !== 'auto') &&
-                    (el.innerHTML && (el.innerHTML.toLowerCase().includes('whatsapp') || 
-                     el.innerHTML.includes('fa-whatsapp') ||
-                     el.innerHTML.includes('wa.me') ||
-                     el.className.toLowerCase().includes('whatsapp')))) {
-                    el.remove();
-                }
-            });
-            
-            // Remove by ID patterns
-            const idPatterns = ['whatsapp', 'wa-widget', 'chat-widget', 'floating-wa'];
-            idPatterns.forEach(pattern => {
-                const el = document.getElementById(pattern);
-                if (el) el.remove();
-            });
-            
-            // Remove elements with WhatsApp icons
-            document.querySelectorAll('i.fa-whatsapp, i.fab.fa-whatsapp').forEach(el => {
-                let parent = el.parentElement;
-                while (parent && parent !== document.body) {
-                    const style = window.getComputedStyle(parent);
-                    if (style.position === 'fixed') {
-                        parent.remove();
-                        break;
-                    }
-                    parent = parent.parentElement;
-                }
-            });
-            
-            // Check and remove elements that might be injected by hosting provider
-            const hostingPatterns = [
-                'cpanel', 'hostinger', 'namecheap', 'godaddy', 'bluehost', 
-                'siteground', 'cloudflare', 'gtranslate', 'translate'
+            // Hapus semua elemen WhatsApp
+            const whatsappSelectors = [
+                '[class*="whatsapp"]',
+                '[class*="wa-"]', 
+                '[id*="whatsapp"]',
+                '[id*="wa-"]',
+                'a[href*="wa.me"]',
+                'a[href*="whatsapp"]',
+                'a[href*="api.whatsapp"]',
+                '[onclick*="whatsapp"]',
+                '[onclick*="wa.me"]',
+                'i.fa-whatsapp',
+                'i.fab.fa-whatsapp',
+                '.fa-whatsapp',
+                '.fab.fa-whatsapp'
             ];
             
-            hostingPatterns.forEach(pattern => {
-                document.querySelectorAll(`[class*="${pattern}"], [id*="${pattern}"]`).forEach(el => {
-                    const html = el.innerHTML?.toLowerCase() || '';
-                    if (html.includes('whatsapp') || html.includes('wa.me') || html.includes('fa-whatsapp')) {
-                        console.log('🏢 Removing hosting provider element:', el);
+            whatsappSelectors.forEach(selector => {
+                try {
+                    document.querySelectorAll(selector).forEach(el => {
+                        console.log('🚫 Menghapus WhatsApp element:', el);
                         el.remove();
-                    }
-                });
+                    });
+                } catch (e) {
+                    // Abaikan error
+                }
             });
             
-            // Remove any element that has green background and is positioned fixed (typical WhatsApp style)
+            // Hapus elemen dengan warna hijau WhatsApp yang fixed
             document.querySelectorAll('*').forEach(el => {
-                const style = window.getComputedStyle(el);
-                if (style.position === 'fixed' && 
-                    (style.backgroundColor.includes('rgb(37, 211, 102)') || // WhatsApp green
-                     style.backgroundColor.includes('#25d366') ||
-                     style.backgroundColor.includes('green')) &&
-                    (style.bottom !== 'auto' || style.right !== 'auto')) {
-                    console.log('💚 Removing green fixed element (likely WhatsApp):', el);
-                    el.remove();
+                try {
+                    const style = window.getComputedStyle(el);
+                    if (style.position === 'fixed' && 
+                        (style.backgroundColor.includes('rgb(37, 211, 102)') || 
+                         style.backgroundColor.includes('#25d366') ||
+                         style.backgroundColor.includes('#25D366'))) {
+                        console.log('💚 Menghapus element hijau WhatsApp:', el);
+                        el.remove();
+                    }
+                } catch (e) {
+                    // Abaikan error
                 }
             });
         }
@@ -191,77 +70,14 @@
         // Run after DOM is loaded
         document.addEventListener('DOMContentLoaded', removeFloatingWhatsApp);
         
-        // Run after window loads (in case scripts inject later)
+        // Run after window loads (untuk elemen yang ditambahkan kemudian)
         window.addEventListener('load', function() {
             setTimeout(removeFloatingWhatsApp, 1000);
             setTimeout(removeFloatingWhatsApp, 3000);
             setTimeout(removeFloatingWhatsApp, 5000);
-            
-            // Show debug info on page after 6 seconds
-            setTimeout(function() {
-                const debugInfo = debugFloatingElements();
-                if (debugInfo.floatingElements.length > 0 || debugInfo.suspiciousElements.length > 0) {
-                    showDebugInfo(debugInfo);
-                }
-            }, 6000);
         });
         
-        // Show debug information on page
-        function showDebugInfo(debugInfo) {
-            const debugDiv = document.createElement('div');
-            debugDiv.id = 'floating-debug-info';
-            debugDiv.style.cssText = `
-                position: fixed;
-                top: 10px;
-                left: 10px;
-                background: rgba(0, 0, 0, 0.9);
-                color: #00ff00;
-                padding: 20px;
-                border-radius: 10px;
-                font-family: monospace;
-                font-size: 12px;
-                z-index: 99999;
-                max-width: 400px;
-                max-height: 300px;
-                overflow-y: auto;
-                border: 2px solid #00ff00;
-            `;
-            
-            let html = '<h3 style="color: #ff0000; margin: 0 0 10px 0;">🚨 FLOATING ELEMENTS DETECTED!</h3>';
-            
-            if (debugInfo.floatingElements.length > 0) {
-                html += '<h4 style="color: #ffff00;">Fixed Positioned Elements:</h4>';
-                debugInfo.floatingElements.forEach((item, index) => {
-                    html += `<div style="margin: 5px 0; padding: 5px; border: 1px solid #333;">
-                        <strong>#${index + 1}</strong><br>
-                        Class: ${item.className || 'none'}<br>
-                        ID: ${item.id || 'none'}<br>
-                        Position: ${item.style.bottom}, ${item.style.right}<br>
-                        HTML: ${item.innerHTML.substring(0, 50)}...
-                    </div>`;
-                });
-            }
-            
-            if (debugInfo.suspiciousElements.length > 0) {
-                html += '<h4 style="color: #ff8800;">WhatsApp Elements:</h4>';
-                debugInfo.suspiciousElements.forEach((item, index) => {
-                    html += `<div style="margin: 5px 0; padding: 5px; border: 1px solid #333;">
-                        <strong>#${index + 1}</strong><br>
-                        Class: ${item.className || 'none'}<br>
-                        ID: ${item.id || 'none'}<br>
-                        Reason: ${item.reason}<br>
-                        HTML: ${item.innerHTML.substring(0, 50)}...
-                    </div>`;
-                });
-            }
-            
-            html += '<button onclick="this.parentElement.remove()" style="margin-top: 10px; padding: 5px 10px; background: #ff0000; color: white; border: none; border-radius: 3px; cursor: pointer;">Close Debug</button>';
-            
-            debugDiv.innerHTML = html;
-            document.body.appendChild(debugDiv);
-        }
-        
-        // Monitor for dynamically added elements
+        // Monitor elemen WhatsApp baru yang ditambahkan
         if (window.MutationObserver) {
             const observer = new MutationObserver(function(mutations) {
                 mutations.forEach(function(mutation) {
@@ -269,9 +85,11 @@
                         mutation.addedNodes.forEach(function(node) {
                             if (node.nodeType === 1) { // Element node
                                 const el = node;
-                                if (el.innerHTML && (el.innerHTML.toLowerCase().includes('whatsapp') || 
-                                    el.innerHTML.includes('fa-whatsapp') || 
-                                    el.innerHTML.includes('wa.me'))) {
+                                const html = el.innerHTML?.toLowerCase() || '';
+                                const className = el.className?.toLowerCase() || '';
+                                if (html.includes('whatsapp') || html.includes('wa.me') || 
+                                    className.includes('whatsapp') || className.includes('wa-')) {
+                                    console.log('🚫 Menghapus WhatsApp element baru:', el);
                                     setTimeout(() => el.remove(), 100);
                                 }
                             }

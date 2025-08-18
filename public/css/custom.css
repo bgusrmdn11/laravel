@@ -221,4 +221,68 @@
     .custom-header {
         margin-bottom: 0;
     }
+}
+
+/* ===== HAPUS FLOATING WHATSAPP ===== */
+/* Sembunyikan semua elemen WhatsApp floating */
+[class*="whatsapp"],
+[class*="wa-"],
+[id*="whatsapp"],
+[id*="wa-"],
+a[href*="wa.me"],
+a[href*="whatsapp"],
+a[href*="api.whatsapp"],
+[onclick*="whatsapp"],
+[onclick*="wa.me"],
+i.fa-whatsapp,
+i.fab.fa-whatsapp,
+.fa-whatsapp,
+.fab.fa-whatsapp {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Hapus floating elements dengan warna hijau WhatsApp */
+[style*="background-color: #25d366"],
+[style*="background-color: #25D366"],
+[style*="background: #25d366"],
+[style*="background: #25D366"],
+[style*="rgb(37, 211, 102)"],
+[style*="rgba(37, 211, 102"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* Hapus elemen fixed yang mengandung WhatsApp */
+*[style*="position: fixed"] {
+    /* Check content untuk WhatsApp */
+}
+
+*[style*="position: fixed"]:has([class*="whatsapp"]),
+*[style*="position: fixed"]:has(i.fa-whatsapp),
+*[style*="position: fixed"]:has(.fa-whatsapp) {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* Hapus widget/plugin WhatsApp dari hosting provider */
+[class*="cpanel"] *[class*="whatsapp"],
+[class*="hostinger"] *[class*="whatsapp"],
+[class*="namecheap"] *[class*="whatsapp"],
+[id*="cpanel"] *[class*="whatsapp"],
+[id*="hostinger"] *[class*="whatsapp"],
+[id*="namecheap"] *[class*="whatsapp"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
 } 
