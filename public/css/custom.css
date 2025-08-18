@@ -223,21 +223,40 @@
     }
 }
 
-/* ===== HAPUS FLOATING WHATSAPP ===== */
+/* ===== HAPUS FLOATING WHATSAPP - ULTRA AGGRESSIVE ===== */
 /* Sembunyikan semua elemen WhatsApp floating */
 [class*="whatsapp"],
 [class*="wa-"],
+[class*="WA-"],
+[class*="WhatsApp"],
+[class*="WHATSAPP"],
 [id*="whatsapp"],
 [id*="wa-"],
+[id*="WA-"],
+[id*="WhatsApp"],
+[id*="WHATSAPP"],
 a[href*="wa.me"],
 a[href*="whatsapp"],
 a[href*="api.whatsapp"],
+a[href*="web.whatsapp"],
 [onclick*="whatsapp"],
 [onclick*="wa.me"],
+[data-whatsapp],
+[data-wa],
 i.fa-whatsapp,
 i.fab.fa-whatsapp,
 .fa-whatsapp,
-.fab.fa-whatsapp {
+.fab.fa-whatsapp,
+.whatsapp-float,
+.whatsapp-btn,
+.wa-float,
+.wa-btn,
+.floating-whatsapp,
+#whatsapp-float,
+#wa-float,
+#floating-whatsapp,
+#whatsapp-widget,
+#wa-widget {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
@@ -248,6 +267,8 @@ i.fab.fa-whatsapp,
     width: 0 !important;
     height: 0 !important;
     overflow: hidden !important;
+    z-index: -9999 !important;
+    transform: scale(0) !important;
 }
 
 /* Hapus floating elements dengan warna hijau WhatsApp */
@@ -275,14 +296,47 @@ i.fab.fa-whatsapp,
     opacity: 0 !important;
 }
 
+/* Hapus semua floating elements di bottom-right */
+*[style*="position: fixed"][style*="bottom"],
+*[style*="position: fixed"][style*="right"] {
+    /* Check if it's likely a floating button */
+}
+
+*[style*="position: fixed"][style*="bottom: 20px"],
+*[style*="position: fixed"][style*="bottom: 15px"],
+*[style*="position: fixed"][style*="bottom: 10px"],
+*[style*="position: fixed"][style*="bottom: 25px"],
+*[style*="position: fixed"][style*="bottom: 30px"],
+*[style*="position: fixed"][style*="right: 20px"],
+*[style*="position: fixed"][style*="right: 15px"],
+*[style*="position: fixed"][style*="right: 10px"],
+*[style*="position: fixed"][style*="right: 25px"],
+*[style*="position: fixed"][style*="right: 30px"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
 /* Hapus widget/plugin WhatsApp dari hosting provider */
 [class*="cpanel"] *[class*="whatsapp"],
 [class*="hostinger"] *[class*="whatsapp"],
 [class*="namecheap"] *[class*="whatsapp"],
+[class*="godaddy"] *[class*="whatsapp"],
+[class*="bluehost"] *[class*="whatsapp"],
 [id*="cpanel"] *[class*="whatsapp"],
 [id*="hostinger"] *[class*="whatsapp"],
-[id*="namecheap"] *[class*="whatsapp"] {
+[id*="namecheap"] *[class*="whatsapp"],
+[id*="godaddy"] *[class*="whatsapp"],
+[id*="bluehost"] *[class*="whatsapp"] {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
+}
+
+/* Hapus semua elemen dengan z-index tinggi yang mungkin floating */
+*[style*="z-index: 999"],
+*[style*="z-index: 9999"],
+*[style*="z-index: 99999"] {
+    /* Only if contains whatsapp content - will be handled by JS */
 } 

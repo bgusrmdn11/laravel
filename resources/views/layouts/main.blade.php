@@ -15,47 +15,78 @@
     <script>
 
 
-        // Sederhana: Hapus floating WhatsApp saja
+        // ULTRA AGGRESSIVE: Hapus semua floating WhatsApp
         function removeFloatingWhatsApp() {
-            console.log('🗑️ Menghapus floating WhatsApp...');
+            console.log('🗑️ ULTRA AGGRESSIVE: Menghapus floating WhatsApp...');
             
-            // Hapus semua elemen WhatsApp
+            // Hapus semua elemen WhatsApp (case insensitive)
             const whatsappSelectors = [
-                '[class*="whatsapp"]',
-                '[class*="wa-"]', 
-                '[id*="whatsapp"]',
-                '[id*="wa-"]',
-                'a[href*="wa.me"]',
-                'a[href*="whatsapp"]',
-                'a[href*="api.whatsapp"]',
-                '[onclick*="whatsapp"]',
-                '[onclick*="wa.me"]',
-                'i.fa-whatsapp',
-                'i.fab.fa-whatsapp',
-                '.fa-whatsapp',
-                '.fab.fa-whatsapp'
+                '[class*="whatsapp" i]', '[class*="wa-" i]', '[class*="WA-" i]',
+                '[id*="whatsapp" i]', '[id*="wa-" i]', '[id*="WA-" i]',
+                'a[href*="wa.me" i]', 'a[href*="whatsapp" i]', 'a[href*="api.whatsapp" i]',
+                '[onclick*="whatsapp" i]', '[onclick*="wa.me" i]',
+                '[data-whatsapp]', '[data-wa]',
+                'i.fa-whatsapp', 'i.fab.fa-whatsapp', '.fa-whatsapp', '.fab.fa-whatsapp',
+                '.whatsapp-float', '.whatsapp-btn', '.wa-float', '.wa-btn', '.floating-whatsapp',
+                '#whatsapp-float', '#wa-float', '#floating-whatsapp', '#whatsapp-widget', '#wa-widget'
             ];
             
             whatsappSelectors.forEach(selector => {
                 try {
                     document.querySelectorAll(selector).forEach(el => {
-                        console.log('🚫 Menghapus WhatsApp element:', el);
+                        console.log('🚫 Menghapus WhatsApp element:', selector, el);
                         el.remove();
                     });
+                } catch (e) {
+                    // Abaikan error selector
+                }
+            });
+            
+            // Hapus semua fixed elements di bottom-right corner
+            document.querySelectorAll('*').forEach(el => {
+                try {
+                    const style = window.getComputedStyle(el);
+                    if (style.position === 'fixed') {
+                        const bottom = parseFloat(style.bottom);
+                        const right = parseFloat(style.right);
+                        const zIndex = parseInt(style.zIndex);
+                        
+                        // Hapus element yang positioned di bottom-right dengan z-index tinggi
+                        if (((bottom >= 0 && bottom <= 50) || (right >= 0 && right <= 50)) && 
+                            (zIndex > 999 || isNaN(zIndex))) {
+                            
+                            // Skip navigation dan modal
+                            if (!el.closest('nav') && !el.classList.contains('modal') && 
+                                !el.id.includes('nav') && !el.classList.contains('notification')) {
+                                console.log('🎯 Menghapus floating element di bottom-right:', el);
+                                el.remove();
+                            }
+                        }
+                        
+                        // Hapus element dengan warna hijau WhatsApp
+                        if (style.backgroundColor.includes('rgb(37, 211, 102)') || 
+                            style.backgroundColor.includes('#25d366') ||
+                            style.backgroundColor.includes('#25D366') ||
+                            style.backgroundColor.includes('rgba(37, 211, 102')) {
+                            console.log('💚 Menghapus element hijau WhatsApp:', el);
+                            el.remove();
+                        }
+                    }
                 } catch (e) {
                     // Abaikan error
                 }
             });
             
-            // Hapus elemen dengan warna hijau WhatsApp yang fixed
+            // Hapus element yang mengandung text WhatsApp
             document.querySelectorAll('*').forEach(el => {
                 try {
-                    const style = window.getComputedStyle(el);
-                    if (style.position === 'fixed' && 
-                        (style.backgroundColor.includes('rgb(37, 211, 102)') || 
-                         style.backgroundColor.includes('#25d366') ||
-                         style.backgroundColor.includes('#25D366'))) {
-                        console.log('💚 Menghapus element hijau WhatsApp:', el);
+                    const text = el.textContent?.toLowerCase() || '';
+                    const innerHTML = el.innerHTML?.toLowerCase() || '';
+                    
+                    if ((text.includes('whatsapp') || innerHTML.includes('whatsapp') || 
+                         text.includes('wa.me') || innerHTML.includes('wa.me')) &&
+                        window.getComputedStyle(el).position === 'fixed') {
+                        console.log('📝 Menghapus element dengan text WhatsApp:', el);
                         el.remove();
                     }
                 } catch (e) {
@@ -72,9 +103,15 @@
         
         // Run after window loads (untuk elemen yang ditambahkan kemudian)
         window.addEventListener('load', function() {
+            setTimeout(removeFloatingWhatsApp, 500);
             setTimeout(removeFloatingWhatsApp, 1000);
+            setTimeout(removeFloatingWhatsApp, 2000);
             setTimeout(removeFloatingWhatsApp, 3000);
             setTimeout(removeFloatingWhatsApp, 5000);
+            setTimeout(removeFloatingWhatsApp, 10000);
+            
+            // Jalankan setiap 5 detik untuk menangkap elemen yang dimuat lambat
+            setInterval(removeFloatingWhatsApp, 5000);
         });
         
         // Monitor elemen WhatsApp baru yang ditambahkan
